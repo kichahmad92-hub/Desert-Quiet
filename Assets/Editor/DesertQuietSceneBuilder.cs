@@ -37,6 +37,11 @@ namespace DesertQuiet.Editor
             Material concrete = MakeMaterial("DQ Concrete", new Color(0.43f, 0.42f, 0.36f));
             Material olive = MakeMaterial("DQ Olive", new Color(0.20f, 0.25f, 0.16f));
             Material amber = MakeMaterial("DQ Objective", new Color(1f, 0.58f, 0.08f));
+            Material soldierUniform = MakeMaterial("DQ Soldier Desert Uniform", new Color(0.42f, 0.39f, 0.27f));
+            Material soldierSkin = MakeMaterial("DQ Soldier Skin", new Color(0.55f, 0.37f, 0.25f));
+            Material soldierArmor = MakeMaterial("DQ Soldier Armor", new Color(0.20f, 0.23f, 0.17f));
+            Material soldierGear = MakeMaterial("DQ Soldier Gear", new Color(0.12f, 0.14f, 0.11f));
+            Material soldierBoots = MakeMaterial("DQ Soldier Boots", new Color(0.10f, 0.085f, 0.065f));
 
             GameObject ground = GameObject.CreatePrimitive(PrimitiveType.Plane);
             ground.name = "Desert Ground";
@@ -58,6 +63,9 @@ namespace DesertQuiet.Editor
             player.name = "Player";
             player.tag = "Player";
             player.GetComponent<Renderer>().sharedMaterial = olive;
+            player.GetComponent<Renderer>().enabled = false;
+            SoldierVisualFactory.Create(player.transform, soldierUniform, soldierSkin, soldierArmor,
+                soldierGear, soldierBoots, true);
             player.transform.position = new Vector3(0, 1.1f, -65f);
             Object.DestroyImmediate(player.GetComponent<CapsuleCollider>());
             CharacterController cc = player.AddComponent<CharacterController>();
@@ -100,6 +108,9 @@ namespace DesertQuiet.Editor
                 guard.name = "Guard Patrol " + (i + 1);
                 guard.transform.position = new Vector3((i % 2 == 0 ? -1 : 1) * (18 + i * 4), 1, 5 + i * 18);
                 guard.GetComponent<Renderer>().sharedMaterial = olive;
+                guard.GetComponent<Renderer>().enabled = false;
+                SoldierVisualFactory.Create(guard.transform, soldierUniform, soldierSkin, soldierArmor,
+                    soldierGear, soldierBoots, true);
                 guard.AddComponent<GuardAI>();
                 guard.AddComponent<TargetHealth>();
             }
