@@ -7,6 +7,7 @@ using DesertQuiet.Player;
 using DesertQuiet.Missions;
 using DesertQuiet.World;
 using DesertQuiet.Combat;
+using DesertQuiet.Audio;
 
 namespace DesertQuiet.Editor
 {
@@ -74,6 +75,12 @@ namespace DesertQuiet.Editor
             gameCamera.clearFlags = CameraClearFlags.SolidColor;
             gameCamera.backgroundColor = new Color(0.48f, 0.68f, 0.82f);
             cameraObject.AddComponent<AudioListener>();
+            AudioSource desertWind = cameraObject.AddComponent<AudioSource>();
+            desertWind.clip = DesertAudio.Wind;
+            desertWind.loop = true;
+            desertWind.volume = 0.18f;
+            desertWind.spatialBlend = 0f;
+            desertWind.Play();
             cameraObject.transform.position = new Vector3(0, 5, -73);
             cameraObject.AddComponent<SimpleCameraFollow>().SetTarget(player.transform);
 
