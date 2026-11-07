@@ -26,6 +26,8 @@ The generated prototype contains a desert ground plane, perimeter walls, player 
 
 - The scene generator runs inside the Unity Editor; it does not run on GitHub.
 - Guard patrols are simple placeholder movement, not finished stealth/combat AI.
+- A basic hitscan sniper button and one-hit placeholder guard targets are included.
+- Mission 01 completion and the 1200-credit reward are saved locally with PlayerPrefs.
 - The hostage interaction currently uses keyboard E. A dedicated mobile interaction button is still needed.
 - Visuals use Unity primitive meshes and placeholder materials.
 - The project has not yet been opened or compiled in Unity in this workflow.
