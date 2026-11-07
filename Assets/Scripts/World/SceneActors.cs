@@ -10,7 +10,7 @@ namespace DesertQuiet.World
             if (target == null) return;
             Vector3 desired = target.position - target.forward * 6f + Vector3.up * 3f;
             transform.position = Vector3.Lerp(transform.position, desired, Time.deltaTime * 5f);
-            transform.LookAt(target.position + Vector3.up * 1.2f);
+            transform.LookAt(target.position + target.forward * 20f + Vector3.up * 1.2f);
         }
     }
     public sealed class SimpleGuardPatrol : MonoBehaviour
