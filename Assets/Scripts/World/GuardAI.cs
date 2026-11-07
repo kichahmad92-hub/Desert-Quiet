@@ -45,6 +45,7 @@ namespace DesertQuiet.World
 
             if (state == State.Chase)
             {
+                investigatePoint = player.position;
                 MoveTowards(player.position, chaseSpeed);
                 if (distance <= attackRange && Time.time >= nextAttack)
                 {
