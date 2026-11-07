@@ -1,4 +1,5 @@
 using UnityEngine;
+using DesertQuiet.World;
 
 namespace DesertQuiet.Combat
 {
@@ -42,6 +43,7 @@ namespace DesertQuiet.Combat
             if (aimCamera == null) { feedback = "الكاميرا غير متصلة"; return; }
 
             Ray ray = aimCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+            GuardAI.ReportGunshot(aimCamera.transform.position);
             if (Physics.Raycast(ray, out RaycastHit hit, range, hitMask, QueryTriggerInteraction.Ignore))
             {
                 TargetHealth target = hit.collider.GetComponentInParent<TargetHealth>();
