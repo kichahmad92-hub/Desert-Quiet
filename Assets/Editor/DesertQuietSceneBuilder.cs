@@ -105,6 +105,39 @@ namespace DesertQuiet.Editor
                 crate.GetComponent<Renderer>().sharedMaterial = olive;
             }
 
+            // Extra desert-base scenery: watchtowers, shelters, rocks and fuel drums.
+            Material rock = MakeMaterial("DQ Desert Rock", new Color(0.39f, 0.31f, 0.23f));
+            Material canvas = MakeMaterial("DQ Tent Canvas", new Color(0.48f, 0.39f, 0.25f));
+            Material metal = MakeMaterial("DQ Dark Metal", new Color(0.16f, 0.18f, 0.17f));
+
+            CreateWatchtower("West Watchtower", new Vector3(-58f, 0f, 18f), concrete, metal);
+            CreateWatchtower("East Watchtower", new Vector3(58f, 0f, 18f), concrete, metal);
+            CreateWatchtower("North Watchtower", new Vector3(0f, 0f, 88f), concrete, metal);
+            CreateTent("Command Tent", new Vector3(-24f, 0f, 24f), canvas, metal);
+            CreateTent("Medical Tent", new Vector3(25f, 0f, 48f), canvas, amber);
+
+            for (int i = 0; i < 28; i++)
+            {
+                float angle = i * 2.399f;
+                float radius = 42f + (i % 5) * 11f;
+                Vector3 position = new Vector3(Mathf.Cos(angle) * radius, 0.8f, Mathf.Sin(angle) * radius);
+                GameObject boulder = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                boulder.name = "Desert Boulder";
+                boulder.transform.position = position;
+                boulder.transform.localScale = new Vector3(2.2f + (i % 3), 1.4f + (i % 2), 2f + (i % 4));
+                boulder.transform.rotation = Quaternion.Euler(i * 13f, i * 29f, i * 7f);
+                boulder.GetComponent<Renderer>().sharedMaterial = rock;
+            }
+
+            for (int i = 0; i < 10; i++)
+            {
+                GameObject drum = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                drum.name = "Fuel Drum";
+                drum.transform.position = new Vector3(-12f + (i % 5) * 6f, 0.8f, 8f + (i / 5) * 7f);
+                drum.transform.localScale = new Vector3(1.1f, 0.8f, 1.1f);
+                drum.GetComponent<Renderer>().sharedMaterial = metal;
+            }
+
             const string scenePath = "Assets/Scenes/Mission01_DesertBase.unity";
             EditorSceneManager.SaveScene(scene, scenePath);
             AssetDatabase.SaveAssets();
@@ -115,6 +148,37 @@ namespace DesertQuiet.Editor
             if (showDialog)
                 EditorUtility.DisplayDialog("Desert Quiet", "Mission 01 scene created and added to Build Settings.", "OK");
             return scenePath;
+        }
+
+        private static void CreateWatchtower(string name, Vector3 basePosition, Material concrete, Material metal)
+        {
+            for (int x = -1; x <= 1; x += 2)
+                for (int z = -1; z <= 1; z += 2)
+                    CreateBox(name + " Support", basePosition + new Vector3(x * 2f, 3f, z * 2f), new Vector3(0.45f, 6f, 0.45f), metal);
+            CreateBox(name + " Platform", basePosition + new Vector3(0f, 6f, 0f), new Vector3(5.2f, 0.5f, 5.2f), concrete);
+            CreateBox(name + " Roof", basePosition + new Vector3(0f, 9.2f, 0f), new Vector3(6f, 0.5f, 6f), metal);
+            CreateBox(name + " Ladder", basePosition + new Vector3(0f, 3f, -2.5f), new Vector3(0.8f, 5f, 0.35f), concrete);
+        }
+
+        private static void CreateTent(string name, Vector3 position, Material canvas, Material trim)
+        {
+            CreateBox(name + " Base", position + new Vector3(0f, 1f, 0f), new Vector3(8f, 2f, 6f), canvas);
+            GameObject roof = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            roof.name = name + " Roof";
+            roof.transform.position = position + new Vector3(0f, 3f, 0f);
+            roof.transform.localScale = new Vector3(8.8f, 0.35f, 6.8f);
+            roof.transform.rotation = Quaternion.Euler(0f, 0f, -8f);
+            roof.GetComponent<Renderer>().sharedMaterial = trim;
+            CreateBox(name + " Entrance", position + new Vector3(0f, 1f, -3.05f), new Vector3(2f, 2f, 0.15f), trim);
+        }
+
+        private static void CreateBox(string name, Vector3 position, Vector3 scale, Material material)
+        {
+            GameObject box = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            box.name = name;
+            box.transform.position = position;
+            box.transform.localScale = scale;
+            box.GetComponent<Renderer>().sharedMaterial = material;
         }
 
         private static void Wall(string name, Vector3 position, Vector3 scale, Material material)
