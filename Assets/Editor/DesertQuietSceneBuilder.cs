@@ -54,6 +54,7 @@ namespace DesertQuiet.Editor
             player.AddComponent<ThirdPersonMobileController>();
             player.AddComponent<TouchMovePad>();
             player.AddComponent<SniperWeapon>();
+            player.AddComponent<PlayerHealth>();
 
             GameObject cameraObject = new GameObject("Main Camera");
             cameraObject.tag = "MainCamera";
@@ -78,7 +79,7 @@ namespace DesertQuiet.Editor
                 guard.name = "Guard Patrol " + (i + 1);
                 guard.transform.position = new Vector3((i % 2 == 0 ? -1 : 1) * (18 + i * 4), 1, 5 + i * 18);
                 guard.GetComponent<Renderer>().sharedMaterial = olive;
-                guard.AddComponent<SimpleGuardPatrol>();
+                guard.AddComponent<GuardAI>();
                 guard.AddComponent<TargetHealth>();
             }
             for (int i = 0; i < 14; i++)
