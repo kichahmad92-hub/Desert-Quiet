@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using DesertQuiet.Player;
 using DesertQuiet.Missions;
 using DesertQuiet.World;
+using DesertQuiet.Combat;
 
 namespace DesertQuiet.Editor
 {
@@ -52,6 +53,7 @@ namespace DesertQuiet.Editor
             cc.radius = 0.45f;
             player.AddComponent<ThirdPersonMobileController>();
             player.AddComponent<TouchMovePad>();
+            player.AddComponent<SniperWeapon>();
 
             GameObject cameraObject = new GameObject("Main Camera");
             cameraObject.tag = "MainCamera";
@@ -77,6 +79,7 @@ namespace DesertQuiet.Editor
                 guard.transform.position = new Vector3((i % 2 == 0 ? -1 : 1) * (18 + i * 4), 1, 5 + i * 18);
                 guard.GetComponent<Renderer>().sharedMaterial = olive;
                 guard.AddComponent<SimpleGuardPatrol>();
+                guard.AddComponent<TargetHealth>();
             }
             for (int i = 0; i < 14; i++)
             {
