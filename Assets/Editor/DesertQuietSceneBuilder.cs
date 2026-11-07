@@ -145,6 +145,16 @@ namespace DesertQuiet.Editor
                 drum.GetComponent<Renderer>().sharedMaterial = metal;
             }
 
+            // Defensive cover around the base entrance.
+            Material sandbag = MakeMaterial("DQ Sandbags", new Color(0.55f, 0.43f, 0.29f));
+            CreateBox("Sandbag Cover West", new Vector3(-13f, 0.65f, -2f), new Vector3(7f, 1.3f, 1.2f), sandbag);
+            CreateBox("Sandbag Cover East", new Vector3(13f, 0.65f, -2f), new Vector3(7f, 1.3f, 1.2f), sandbag);
+            CreateBox("Sandbag Cover North", new Vector3(0f, 0.65f, 12f), new Vector3(9f, 1.3f, 1.2f), sandbag);
+
+            CreateSearchlight("West Searchlight", new Vector3(-58f, 10f, 18f), new Vector3(0.3f, -0.45f, 1f));
+            CreateSearchlight("East Searchlight", new Vector3(58f, 10f, 18f), new Vector3(-0.3f, -0.45f, 1f));
+            CreateSearchlight("North Searchlight", new Vector3(0f, 10f, 88f), new Vector3(0f, -0.45f, -1f));
+
             const string scenePath = "Assets/Scenes/Mission01_DesertBase.unity";
             EditorSceneManager.SaveScene(scene, scenePath);
             AssetDatabase.SaveAssets();
@@ -155,6 +165,20 @@ namespace DesertQuiet.Editor
             if (showDialog)
                 EditorUtility.DisplayDialog("Desert Quiet", "Mission 01 scene created and added to Build Settings.", "OK");
             return scenePath;
+        }
+
+        private static void CreateSearchlight(string name, Vector3 position, Vector3 direction)
+        {
+            GameObject lightObject = new GameObject(name);
+            lightObject.transform.position = position;
+            lightObject.transform.rotation = Quaternion.LookRotation(direction.normalized, Vector3.up);
+            Light searchlight = lightObject.AddComponent<Light>();
+            searchlight.type = LightType.Spot;
+            searchlight.color = new Color(1f, 0.86f, 0.62f);
+            searchlight.intensity = 2.2f;
+            searchlight.range = 42f;
+            searchlight.spotAngle = 58f;
+            searchlight.shadows = LightShadows.None;
         }
 
         private static void CreateWatchtower(string name, Vector3 basePosition, Material concrete, Material metal)
