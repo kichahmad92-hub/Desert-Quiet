@@ -1,4 +1,5 @@
 using UnityEngine;
+using DesertQuiet.Core;
 
 namespace DesertQuiet.Missions
 {
@@ -25,7 +26,8 @@ namespace DesertQuiet.Missions
         {
             if (stage != Stage.ReachExtraction) return;
             stage = Stage.Completed;
-            status = "اكتملت المهمة بنجاح! المكافأة: 1200 نقطة.";
+            ProgressStore.CompleteMission01(1200);
+            status = "اكتملت المهمة بنجاح! الرصيد: " + ProgressStore.Credits + " نقطة.";
         }
         private void OnGUI()
         {
