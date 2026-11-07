@@ -12,6 +12,8 @@ namespace DesertQuiet.World
         private Transform[] arms;
         private Transform[] legs;
         private Transform head;
+        private Transform torso;
+        private Vector3 torsoBasePosition;
         private Vector3 previousPosition;
         private float phase;
 
@@ -27,11 +29,13 @@ namespace DesertQuiet.World
                 if (item.name == "Upper Arm" || item.name == "Forearm") armParts.Add(item);
                 if (item.name == "Thigh" || item.name == "Lower Leg") legParts.Add(item);
                 if (item.name == "Head") head = item;
+                if (item.name == "Uniform Torso") torso = item;
             }
 
             arms = armParts.ToArray();
             legs = legParts.ToArray();
             previousPosition = transform.position;
+            if (torso != null) torsoBasePosition = torso.localPosition;
         }
 
         private void Update()
@@ -69,9 +73,8 @@ namespace DesertQuiet.World
             if (head != null)
                 head.localRotation = Quaternion.Euler(0f, Mathf.Sin(Time.time * 0.65f) * 2f, 0f);
 
-            transform.localPosition = new Vector3(0f,
-                Mathf.Sin(phase * 2f) * 0.035f * movement + Mathf.Sin(Time.time * 1.7f) * 0.008f,
-                0f);
+            if (torso != null)
+                torso.localPosition = torsoBasePosition + Vector3.up * (Mathf.Sin(phase * 2f) * 0.035f * movement);
         }
     }
 }
