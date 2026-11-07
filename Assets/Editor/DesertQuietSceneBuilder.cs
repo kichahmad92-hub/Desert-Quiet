@@ -15,7 +15,17 @@ namespace DesertQuiet.Editor
         [MenuItem("Desert Quiet/Build Mission 01 Scene")]
         public static void BuildMission01()
         {
-            if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+            BuildMission01Internal(true);
+        }
+
+        public static string BuildMission01ForAutomation()
+        {
+            return BuildMission01Internal(false);
+        }
+
+        private static string BuildMission01Internal(bool showDialog)
+        {
+            if (showDialog && !EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return null;
             Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             RenderSettings.ambientLight = new Color(0.72f, 0.64f, 0.48f);
             RenderSettings.fog = true;
@@ -91,9 +101,16 @@ namespace DesertQuiet.Editor
                 crate.GetComponent<Renderer>().sharedMaterial = olive;
             }
 
-            EditorSceneManager.SaveScene(scene, "Assets/Scenes/Mission01_DesertBase.unity");
+            const string scenePath = "Assets/Scenes/Mission01_DesertBase.unity";
+            EditorSceneManager.SaveScene(scene, scenePath);
             AssetDatabase.SaveAssets();
-            EditorUtility.DisplayDialog("Desert Quiet", "Mission 01 scene created. Open Assets/Scenes/Mission01_DesertBase.unity and press Play.", "OK");
+            EditorBuildSettings.scenes = new[]
+            {
+                new EditorBuildSettingsScene(scenePath, true)
+            };
+            if (showDialog)
+                EditorUtility.DisplayDialog("Desert Quiet", "Mission 01 scene created and added to Build Settings.", "OK");
+            return scenePath;
         }
 
         private static void Wall(string name, Vector3 position, Vector3 scale, Material material)
