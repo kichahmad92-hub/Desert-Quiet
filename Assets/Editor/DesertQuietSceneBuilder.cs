@@ -154,6 +154,18 @@ namespace DesertQuiet.Editor
             CreateSearchlight("West Searchlight", new Vector3(-58f, 10f, 18f), new Vector3(0.3f, -0.45f, 1f));
             CreateSearchlight("East Searchlight", new Vector3(58f, 10f, 18f), new Vector3(-0.3f, -0.45f, 1f));
             CreateSearchlight("North Searchlight", new Vector3(0f, 10f, 88f), new Vector3(0f, -0.45f, -1f));
+            // Parked military vehicles with detailed exterior parts.
+            Material vehicleOlive = MakeMaterial("DQ Vehicle Olive", new Color(0.19f, 0.23f, 0.15f));
+            Material vehicleRubber = MakeMaterial("DQ Tire Rubber", new Color(0.035f, 0.04f, 0.035f));
+            Material vehicleGlass = MakeMaterial("DQ Armored Glass", new Color(0.10f, 0.17f, 0.19f));
+            Material vehicleMetal = MakeMaterial("DQ Vehicle Metal", new Color(0.11f, 0.13f, 0.12f));
+            Material headlamp = MakeMaterial("DQ Headlamp", new Color(1f, 0.82f, 0.48f));
+            Material tailLamp = MakeMaterial("DQ Tail Lamp", new Color(0.65f, 0.045f, 0.025f));
+            CreateMilitaryJeep("Armored Patrol Jeep", new Vector3(-34f, 0f, -18f), 24f,
+                vehicleOlive, vehicleRubber, vehicleGlass, vehicleMetal, headlamp, tailLamp);
+            CreateSupplyTruck("Military Supply Truck", new Vector3(34f, 0f, 32f), -18f,
+                vehicleOlive, vehicleRubber, vehicleGlass, vehicleMetal, headlamp, tailLamp);
+
 
             const string scenePath = "Assets/Scenes/Mission01_DesertBase.unity";
             EditorSceneManager.SaveScene(scene, scenePath);
@@ -179,6 +191,82 @@ namespace DesertQuiet.Editor
             searchlight.range = 42f;
             searchlight.spotAngle = 58f;
             searchlight.shadows = LightShadows.None;
+        }
+
+        private static GameObject CreateVehiclePart(Transform parent, string name, PrimitiveType type,
+            Vector3 position, Vector3 scale, Material material, Vector3 rotation)
+        {
+            GameObject part = GameObject.CreatePrimitive(type);
+            part.name = name;
+            part.transform.SetParent(parent, false);
+            part.transform.localPosition = position;
+            part.transform.localRotation = Quaternion.Euler(rotation);
+            part.transform.localScale = scale;
+            part.GetComponent<Renderer>().sharedMaterial = material;
+            return part;
+        }
+
+        private static void CreateMilitaryJeep(string name, Vector3 position, float yaw,
+            Material body, Material rubber, Material glass, Material metal, Material lamps, Material rearLamps)
+        {
+            GameObject root = new GameObject(name);
+            root.transform.position = position;
+            root.transform.rotation = Quaternion.Euler(0f, yaw, 0f);
+
+            CreateVehiclePart(root.transform, "Armored Chassis", PrimitiveType.Cube, new Vector3(0f, 0.9f, 0f), new Vector3(2.25f, 0.65f, 4.1f), body, Vector3.zero);
+            CreateVehiclePart(root.transform, "Engine Hood", PrimitiveType.Cube, new Vector3(0f, 1.42f, 1.25f), new Vector3(2.05f, 0.48f, 1.35f), body, Vector3.zero);
+            CreateVehiclePart(root.transform, "Cabin Roof", PrimitiveType.Cube, new Vector3(0f, 2.35f, -0.35f), new Vector3(1.95f, 0.18f, 1.85f), body, Vector3.zero);
+            CreateVehiclePart(root.transform, "Front Windshield", PrimitiveType.Cube, new Vector3(0f, 1.95f, 0.68f), new Vector3(1.78f, 0.72f, 0.08f), glass, new Vector3(-12f, 0f, 0f));
+            CreateVehiclePart(root.transform, "Rear Window", PrimitiveType.Cube, new Vector3(0f, 1.95f, -1.35f), new Vector3(1.65f, 0.62f, 0.07f), glass, new Vector3(12f, 0f, 0f));
+            for (int side = -1; side <= 1; side += 2)
+            {
+                CreateVehiclePart(root.transform, "Side Window", PrimitiveType.Cube, new Vector3(side * 0.99f, 1.98f, -0.32f), new Vector3(0.06f, 0.62f, 1.45f), glass, Vector3.zero);
+                CreateVehiclePart(root.transform, "Door Armor", PrimitiveType.Cube, new Vector3(side * 1.04f, 1.22f, -0.38f), new Vector3(0.12f, 0.72f, 1.45f), body, Vector3.zero);
+                for (int axle = -1; axle <= 1; axle += 2)
+                    CreateVehiclePart(root.transform, "All Terrain Tire", PrimitiveType.Cylinder, new Vector3(side * 1.18f, 0.67f, axle * 1.35f), new Vector3(0.78f, 0.28f, 0.78f), rubber, new Vector3(0f, 0f, 90f));
+                CreateVehiclePart(root.transform, "Side Mirror", PrimitiveType.Cube, new Vector3(side * 1.18f, 1.85f, 0.62f), new Vector3(0.22f, 0.12f, 0.28f), metal, Vector3.zero);
+            }
+            CreateVehiclePart(root.transform, "Front Bumper", PrimitiveType.Cube, new Vector3(0f, 0.68f, 2.12f), new Vector3(2.45f, 0.22f, 0.22f), metal, Vector3.zero);
+            CreateVehiclePart(root.transform, "Rear Bumper", PrimitiveType.Cube, new Vector3(0f, 0.68f, -2.12f), new Vector3(2.35f, 0.2f, 0.2f), metal, Vector3.zero);
+            CreateVehiclePart(root.transform, "Front Grille", PrimitiveType.Cube, new Vector3(0f, 1.18f, 2.08f), new Vector3(0.72f, 0.42f, 0.06f), metal, Vector3.zero);
+            for (int x = -1; x <= 1; x += 2)
+            {
+                CreateVehiclePart(root.transform, "Headlight", PrimitiveType.Cylinder, new Vector3(x * 0.78f, 1.38f, 2.08f), new Vector3(0.28f, 0.07f, 0.28f), lamps, new Vector3(90f, 0f, 0f));
+                CreateVehiclePart(root.transform, "Rear Lamp", PrimitiveType.Cube, new Vector3(x * 0.82f, 1.22f, -2.08f), new Vector3(0.22f, 0.28f, 0.08f), rearLamps, Vector3.zero);
+            }
+            CreateVehiclePart(root.transform, "Spare Tire", PrimitiveType.Cylinder, new Vector3(0f, 1.45f, -2.22f), new Vector3(0.82f, 0.28f, 0.82f), rubber, new Vector3(90f, 0f, 0f));
+            CreateVehiclePart(root.transform, "Radio Antenna", PrimitiveType.Cylinder, new Vector3(0.78f, 2.85f, -0.85f), new Vector3(0.025f, 0.62f, 0.025f), metal, new Vector3(0f, 0f, -8f));
+            CreateVehiclePart(root.transform, "Roof Equipment Rack", PrimitiveType.Cube, new Vector3(0f, 2.48f, -0.3f), new Vector3(1.45f, 0.08f, 1.35f), metal, Vector3.zero);
+        }
+
+        private static void CreateSupplyTruck(string name, Vector3 position, float yaw,
+            Material body, Material rubber, Material glass, Material metal, Material lamps, Material rearLamps)
+        {
+            GameObject root = new GameObject(name);
+            root.transform.position = position;
+            root.transform.rotation = Quaternion.Euler(0f, yaw, 0f);
+
+            CreateVehiclePart(root.transform, "Truck Chassis", PrimitiveType.Cube, new Vector3(0f, 0.95f, 0f), new Vector3(2.5f, 0.55f, 5.8f), metal, Vector3.zero);
+            CreateVehiclePart(root.transform, "Cargo Bed", PrimitiveType.Cube, new Vector3(0f, 1.8f, -0.95f), new Vector3(2.45f, 1.25f, 3.2f), body, Vector3.zero);
+            CreateVehiclePart(root.transform, "Cabin", PrimitiveType.Cube, new Vector3(0f, 1.95f, 1.75f), new Vector3(2.35f, 1.85f, 1.85f), body, Vector3.zero);
+            CreateVehiclePart(root.transform, "Truck Windshield", PrimitiveType.Cube, new Vector3(0f, 2.25f, 2.7f), new Vector3(1.95f, 0.85f, 0.08f), glass, Vector3.zero);
+            CreateVehiclePart(root.transform, "Truck Roof", PrimitiveType.Cube, new Vector3(0f, 2.92f, 1.75f), new Vector3(2.38f, 0.16f, 1.9f), body, Vector3.zero);
+            for (int side = -1; side <= 1; side += 2)
+            {
+                CreateVehiclePart(root.transform, "Truck Side Window", PrimitiveType.Cube, new Vector3(side * 1.19f, 2.32f, 1.75f), new Vector3(0.06f, 0.72f, 1.25f), glass, Vector3.zero);
+                CreateVehiclePart(root.transform, "Cargo Side Rail", PrimitiveType.Cube, new Vector3(side * 1.25f, 2.45f, -0.95f), new Vector3(0.12f, 1.25f, 3.2f), metal, Vector3.zero);
+                for (int axle = -1; axle <= 1; axle++)
+                    CreateVehiclePart(root.transform, "Truck Tire", PrimitiveType.Cylinder, new Vector3(side * 1.3f, 0.68f, axle * 1.95f), new Vector3(0.9f, 0.3f, 0.9f), rubber, new Vector3(0f, 0f, 90f));
+                CreateVehiclePart(root.transform, "Truck Mirror", PrimitiveType.Cube, new Vector3(side * 1.38f, 2.15f, 2.3f), new Vector3(0.22f, 0.12f, 0.3f), metal, Vector3.zero);
+            }
+            CreateVehiclePart(root.transform, "Truck Front Bumper", PrimitiveType.Cube, new Vector3(0f, 0.78f, 2.78f), new Vector3(2.65f, 0.24f, 0.24f), metal, Vector3.zero);
+            CreateVehiclePart(root.transform, "Truck Grille", PrimitiveType.Cube, new Vector3(0f, 1.65f, 2.72f), new Vector3(0.85f, 0.5f, 0.08f), metal, Vector3.zero);
+            for (int x = -1; x <= 1; x += 2)
+            {
+                CreateVehiclePart(root.transform, "Truck Headlight", PrimitiveType.Cylinder, new Vector3(x * 0.88f, 1.72f, 2.72f), new Vector3(0.3f, 0.07f, 0.3f), lamps, new Vector3(90f, 0f, 0f));
+                CreateVehiclePart(root.transform, "Truck Rear Lamp", PrimitiveType.Cube, new Vector3(x * 1.05f, 1.25f, -2.92f), new Vector3(0.22f, 0.32f, 0.08f), rearLamps, Vector3.zero);
+            }
+            CreateVehiclePart(root.transform, "Canvas Cargo Cover", PrimitiveType.Cube, new Vector3(0f, 2.65f, -0.95f), new Vector3(2.28f, 0.12f, 2.95f), body, Vector3.zero);
         }
 
         private static void CreateWatchtower(string name, Vector3 basePosition, Material concrete, Material metal)
