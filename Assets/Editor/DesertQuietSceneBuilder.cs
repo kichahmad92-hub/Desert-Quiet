@@ -56,6 +56,7 @@ namespace DesertQuiet.Editor
             GameObject player = GameObject.CreatePrimitive(PrimitiveType.Capsule);
             player.name = "Player";
             player.tag = "Player";
+            player.GetComponent<Renderer>().sharedMaterial = olive;
             player.transform.position = new Vector3(0, 1.1f, -65f);
             Object.DestroyImmediate(player.GetComponent<CapsuleCollider>());
             CharacterController cc = player.AddComponent<CharacterController>();
@@ -68,7 +69,10 @@ namespace DesertQuiet.Editor
 
             GameObject cameraObject = new GameObject("Main Camera");
             cameraObject.tag = "MainCamera";
-            cameraObject.AddComponent<Camera>().fieldOfView = 62f;
+            Camera gameCamera = cameraObject.AddComponent<Camera>();
+            gameCamera.fieldOfView = 62f;
+            gameCamera.clearFlags = CameraClearFlags.SolidColor;
+            gameCamera.backgroundColor = new Color(0.48f, 0.68f, 0.82f);
             cameraObject.AddComponent<AudioListener>();
             cameraObject.transform.position = new Vector3(0, 5, -73);
             cameraObject.AddComponent<SimpleCameraFollow>().SetTarget(player.transform);
@@ -132,8 +136,16 @@ namespace DesertQuiet.Editor
 
         private static Material MakeMaterial(string name, Color color)
         {
-            Shader shader = Shader.Find("Universal Render Pipeline/Lit");
-            if (shader == null) shader = Shader.Find("Standard");
+            // Select a shader that matches the active render pipeline.
+            // Using URP/Lit in a Built-in Render Pipeline project renders magenta.
+            bool usesSrp = UnityEngine.Rendering.GraphicsSettings.currentRenderPipeline != null;
+            Shader shader = usesSrp
+                ? Shader.Find("Universal Render Pipeline/Lit")
+                : Shader.Find("Standard");
+            if (shader == null) shader = Shader.Find("Unlit/Color");
+            if (shader == null) shader = Shader.Find("Sprites/Default");
+            if (shader == null)
+                throw new System.InvalidOperationException("Desert Quiet: No compatible built-in or URP shader was found.");
             Material material = new Material(shader);
             material.name = name; material.color = color;
             return material;
