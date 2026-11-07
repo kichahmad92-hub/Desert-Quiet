@@ -23,6 +23,13 @@ namespace DesertQuiet.Missions
         {
             if (inside && requireInteract && !activated && Input.GetKeyDown(KeyCode.E)) Activate();
         }
+        private void OnGUI()
+        {
+            if (!inside || !requireInteract || activated) return;
+            const float width = 150f, height = 58f;
+            Rect button = new Rect(Screen.width - width - 28f, Screen.height - height - 36f, width, height);
+            if (GUI.Button(button, "إنقاذ الرهينة")) Activate();
+        }
         private void Activate()
         {
             if (activated || mission == null) return;
