@@ -19,16 +19,22 @@ The generated prototype contains a desert ground plane, perimeter walls, player 
 ## Mission flow
 
 - Enter the base entry zone.
-- Reach the hostage and press E to rescue.
+- Reach the hostage and use the on-screen Arabic rescue button (or keyboard E in the Editor).
 - Reach the extraction zone to complete the mission and receive the prototype reward message.
+
+## Combat controls
+
+- **منظار** toggles a simple camera field-of-view zoom for mobile sniper aiming.
+- **إلغاء المنظار** returns to the normal camera field of view.
+- **إطلاق** fires a center-screen hitscan ray; placeholder guards can be eliminated with one hit.
+
+The scope is a basic zoom mode, not a finished optical-scope rendering or ballistic simulation.
 
 ## Important limitations
 
-- The scene generator runs inside the Unity Editor; it does not run on GitHub.
+- The scene generator runs inside the Unity Editor; it does not run on GitHub or directly on an Android tablet.
 - Guard patrols are simple placeholder movement, not finished stealth/combat AI.
-- A basic hitscan sniper button and one-hit placeholder guard targets are included.
 - Mission 01 completion and the 1200-credit reward are saved locally with PlayerPrefs.
-- The hostage interaction currently uses keyboard E. A dedicated mobile interaction button is still needed.
 - Visuals use Unity primitive meshes and placeholder materials.
 - The project has not yet been opened or compiled in Unity in this workflow.
 - No Android APK has been produced or tested.
