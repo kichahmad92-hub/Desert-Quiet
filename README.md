@@ -14,7 +14,7 @@ The repository contains the initial Unity project structure, runtime prototype s
 4. The tool creates and saves the scene at Assets/Scenes/Mission01_DesertBase.unity.
 5. Open that scene and press Play.
 
-The generated prototype contains a desert ground plane, perimeter walls, player capsule with CharacterController movement, basic touch directional buttons, a follow camera, six placeholder patrol guards, a hostage, objective trigger zones, and an Arabic mission HUD.
+The generated prototype contains a desert ground plane, perimeter walls, player capsule with CharacterController movement, basic touch directional buttons, a follow camera, six AI guards, a hostage, objective trigger zones, and an Arabic mission HUD.
 
 ## Mission flow
 
@@ -33,7 +33,9 @@ The scope is a basic zoom mode, not a finished optical-scope rendering or ballis
 ## Important limitations
 
 - The scene generator runs inside the Unity Editor; it does not run on GitHub or directly on an Android tablet.
-- Guard patrols are simple placeholder movement, not finished stealth/combat AI.
+- Guard AI is an early prototype: guards patrol, detect the player within a forward vision cone, chase, and attack at close range. Walls and obstacles can block vision.
+- Nearby guards investigate the player's position when the sniper is fired; this is a simple sound-alert simulation, not a full stealth sound system.
+- Player health starts at 100 and decreases when a guard reaches attack range. There is not yet a death/restart flow or healing system.
 - Mission 01 completion and the 1200-credit reward are saved locally with PlayerPrefs.
 - Visuals use Unity primitive meshes and placeholder materials.
 - The project has not yet been opened or compiled in Unity in this workflow.
