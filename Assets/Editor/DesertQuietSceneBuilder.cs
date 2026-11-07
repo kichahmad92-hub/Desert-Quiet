@@ -66,6 +66,7 @@ namespace DesertQuiet.Editor
             player.GetComponent<Renderer>().enabled = false;
             SoldierVisualFactory.Create(player.transform, soldierUniform, soldierSkin, soldierArmor,
                 soldierGear, soldierBoots, true);
+            player.AddComponent<SoldierProceduralAnimator>();
             player.transform.position = new Vector3(0, 1.1f, -65f);
             Object.DestroyImmediate(player.GetComponent<CapsuleCollider>());
             CharacterController cc = player.AddComponent<CharacterController>();
@@ -111,6 +112,7 @@ namespace DesertQuiet.Editor
                 guard.GetComponent<Renderer>().enabled = false;
                 SoldierVisualFactory.Create(guard.transform, soldierUniform, soldierSkin, soldierArmor,
                     soldierGear, soldierBoots, true);
+                guard.AddComponent<SoldierProceduralAnimator>();
                 guard.AddComponent<GuardAI>();
                 guard.AddComponent<TargetHealth>();
             }
