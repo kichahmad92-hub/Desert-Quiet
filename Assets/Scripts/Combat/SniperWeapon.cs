@@ -1,5 +1,6 @@
 using UnityEngine;
 using DesertQuiet.World;
+using DesertQuiet.Audio;
 
 namespace DesertQuiet.Combat
 {
@@ -44,12 +45,14 @@ namespace DesertQuiet.Combat
 
             Ray ray = aimCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
             GuardAI.ReportGunshot(aimCamera.transform.position);
+            DesertAudio.PlayGunshot(aimCamera.transform.position);
             if (Physics.Raycast(ray, out RaycastHit hit, range, hitMask, QueryTriggerInteraction.Ignore))
             {
                 TargetHealth target = hit.collider.GetComponentInParent<TargetHealth>();
                 if (target != null)
                 {
                     target.ApplyHit(damage);
+                    DesertAudio.PlayImpact(hit.point);
                     feedback = "إصابة مؤكدة";
                 }
                 else feedback = "أصبت الهدف";
